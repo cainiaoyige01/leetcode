@@ -12,38 +12,39 @@ func main() {
 	fmt.Println(isValid("([)]"))
 }
 
-// isValid
-func isValid(str string) bool {
-	//rune 类似与int32 会自动按照字符独立的单位处理
-	var runes []rune
-	for _, v := range str {
+func isValid(s string) bool {
+	//定义一个切片来存储右边的括号 rune 可以确定每一个元素
+	var str []rune
+	for _, v := range s {
 		switch v {
-		case '{', '(', '[':
-			runes = append(runes, v)
-		case '}', ')', ']':
-			if len(runes) > 0 && opposite(v) == runes[len(runes)-1] {
-				//这是秒点之一 缩小组数 就是弹掉的那一部门
-				runes = runes[0 : len(runes)-1]
+		case '[', '{', '(':
+			//存储到str中去
+			str = append(str, v)
+		case ']', '}', ')':
+			//首先要判断切片中是否有元素 然后是该元素是否与反向的相等
+			if len(str) > 0 && apposite(v) == str[len(str)-1] {
+				//进行类似与栈进行弹栈
+				str = str[:len(str)-1]
 			} else {
 				return false
 			}
 		}
 	}
-	if len(runes) > 0 {
+	//判断str中是否还有元素
+	if len(str) > 0 {
 		return false
 	}
+
 	return true
 }
-
-// opposite 目的是为了反弹出去 也就是类似与弹栈
-func opposite(v int32) rune {
+func apposite(v int32) rune {
 	switch v {
+	case ']':
+		return '['
 	case '}':
 		return '{'
 	case ')':
 		return '('
-	case ']':
-		return '['
 	}
 	return '\n'
 }
